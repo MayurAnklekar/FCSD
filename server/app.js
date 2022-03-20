@@ -1,14 +1,10 @@
 // const http = require('http')
 // const fs = require('fs')
-const TeachableMachine = require("@sashido/teachablemachine-node");
 const SerialPort = require('serialport');
 const parsers =  SerialPort.parsers;
 const parser = new parsers.Readline({ delimiter: '\r\n' });
-//const bodyParser = require('body-parser');
 
 const app = require('express')();
-//app.use(express.json());
-//app.use(bodyParser.json());
 
 const server = require('http').createServer(app);
 
@@ -17,10 +13,6 @@ const io = require('socket.io')(server, {
         origin: '*'
     }
 });
-
-const model = new TeachableMachine({
-    modelUrl: "https://teachablemachine.withgoogle.com/models/whQu8VItt/"
-  });
 
 io.on("connection", socket => {
     // socket.on("chat", (payload)=>{
