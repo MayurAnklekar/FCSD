@@ -1,6 +1,6 @@
 const db = require("../config/db")
-//const connectDB = require("../config/mongodb")
-//onst Chat = require("../config/model")
+// const connectDB = require("../config/mongodb")
+// const Chat = require("../config/model")
 // const accountSid = "AC892d55e0019731818606588b3bc8188e";
 // const authToken = "54fd96d416b934a50463706b43aed0e7";
 // const client = require('twilio')(accountSid, authToken);
@@ -23,7 +23,7 @@ const sendMessagetoServer = async(req, res) => {
     console.log(req.body)
     const msg = req.body.message;
     const state = req.body.state;
-    //connectDB()
+    // connectDB()
     // let chat = new Chat({
     //     sender: "user",
     //     receiver: "server",

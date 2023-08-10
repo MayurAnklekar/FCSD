@@ -7,10 +7,12 @@ const mongoose = require('mongoose');
 const cors = require("cors");
 const express = require("express");
 const { cloudinary } = require('./utils/cloudinary')
-const TeachableMachine = require("@sashido/teachablemachine-node");
+// const TeachableMachine = require("@sashido/teachablemachine-node");
 const Schema = mongoose.Schema
 const parsers = SerialPort.parsers;
 const parser = new parsers.Readline({ delimiter: '\r\n' });
+const { exec } = require("child_process");
+const { writeFileSync } = require("fs")
 
 
 const app = express();
@@ -101,38 +103,71 @@ parser.on('data', function (data) {
   {
     weight = Math.abs(weight)+0.5;
   }
+  else
+  {
+    weight = Math.abs(weight/20);
+  }
   console.log(Math.abs(weight), "Hi")
   io.emit("data", { w: weight, d: distance });
 })
 
-const model = new TeachableMachine({
-  modelUrl: "https://teachablemachine.withgoogle.com/models/aSsfZvT63/"
-});
+// const model = new TeachableMachine({
+//    modelUrl: "https://teachablemachine.withgoogle.com/models/aSsfZvT63/"
+//   //modelUrl: "https://teachablemachine.withgoogle.com/models/DDEsfzWnK/"
+// });
 
-  app.post('/upload', async (req, res) => {
+  // app.post('/upload', async (req, res) => {
 
-    console.log(req.body)
-    const { data } = req.body;
-    const uploadResponse = await cloudinary.uploader.upload(data, { upload_preset: 'fruits' });
-    console.log(uploadResponse)
-    const url = uploadResponse.url;
-    res.send({ url: url })
-  });
+  //   console.log(req.body)
+  //   const { data } = req.body;
+  //   const uploadResponse = await cloudinary.uploader.upload(data, { upload_preset: 'fruits' });
+  //   // console.log(uploadResponse)
+  //   const url = uploadResponse.url;
+  //   res.send({ url: url })
+  // });
 
 
   app.post("/image/classify", async (req, res) => {
-    console.log(req.body)
-    const { url } = req.body;
+    // console.log(req.body)
+    const {data} = req.body;
 
-    return model.classify({
-      imageUrl: url,
-    }).then((predictions) => {
-      console.log(predictions);
-      return res.json(predictions);
-    }).catch((e) => {
-      console.error(e);
-      res.status(500).send("Something went wrong!")
+    const base64Data = data.replace(/^data:image\/jpeg;base64,/, "");
+
+    const image = Buffer.from(base64Data, "base64")
+    writeFileSync("image.png", image)
+
+    // console.log("image", data);
+
+    const resp = exec("python ./model.py", (error, stdout, stderr) => {
+      if (error) {
+
+        console.log(`error: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.log(`stderr: ${stderr}`);
+      }
+      // console.log(`stdout: jhjhjhj ${stdout} hello`);
+      //spll = stdout.split(" ")
+      const arr = stdout.split("\n");
+      console.log("I am array", arr[1])
+
+      res.send({ fruit: arr[1] })
+      return;
     });
+
+    // console.log(data)
+    // return model.classify({
+    //   imageUrl: data,
+    // }).then((predictions) => {
+    //   console.log(predictions);
+    //   return res.json(predictions);
+    // }).catch((e) => {
+    //   console.error(e);
+    //   res.status(500).send("Something went wrong!")
+    // });
+
+
   });
 
 

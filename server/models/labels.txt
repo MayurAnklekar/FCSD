@@ -1,0 +1,10 @@
+0 Apple
+1 Banana
+2 Carrot
+3 Cucumber
+4 Coconut
+5 Apricot
+6 Grape
+7 Pineapple
+8 Mango
+9 Strawberry

@@ -24,6 +24,8 @@ const addTransaction = async (req, res) => {
         cancel_url: 'http://localhost:3000',
     });
 
+    res.send({ url: session.url, })
+
     const id = session.id;
     const amount = total;
     const status = "success";
@@ -87,13 +89,9 @@ const addTransaction = async (req, res) => {
         host: "smtp.gmail.com",
         auth: {
             user: 'demotestrvce@gmail.com',
-            pass: 'sgohurowsmhbbpuf'
+            pass: 'tevneuqwghhlsoah'
         },
     });
-
-    
-    
-
 
     
 
@@ -124,7 +122,7 @@ const addTransaction = async (req, res) => {
 `;
 
    
-    res.send({ url: session.url, })
+    
 
     if(fruitsRequired.length>0)
     { 
